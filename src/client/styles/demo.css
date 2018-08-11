@@ -1,0 +1,38 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+.app-wrap {
+  position: relative;
+  height: 100%;
+  background-color: grey;
+  overflow-x: hidden;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #182f54;
+  color: #dbddcf;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #000099;
+  color: #ffffff;
+  z-index: 1000;
+}
+
+.coroner-message {
+  background-color: goldenrod;
+  color: black;
+}
