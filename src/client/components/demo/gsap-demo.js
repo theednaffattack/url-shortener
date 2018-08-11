@@ -1,8 +1,13 @@
 import React from 'react';
-import { TweenLite } from 'gsap';
-import styled from 'styled-components'
+import { TweenLite, Expo } from 'gsap';
+
+import UriForm from '../UrlForm';
 
 import '../../styles/demo.css';
+
+const uriObj = {
+  uri: 'http://www.google.com'
+};
 
 const { Component } = React;
 
@@ -15,35 +20,37 @@ class Demo extends Component {
     this.coronerTween = null;
     this.handleClick = this.handleClick.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
+    this.state = { coroner: { y: '0px' }, message: { text: 'Sample message' } };
   }
 
   handleClick(e) {
     e.preventDefault();
     this.coronerTween = TweenLite.to(this.coronerWrap, 1, {
-      y: '100px',
+      y: '200px',
       ease: Expo.easeInOut
     });
     console.log(this.coronerWrap);
     console.log(this.props);
   }
 
-  componentDidMount() {
-    this.loaderTween = TweenLite.to(this.loaderWrap, 1, {
-      x: '100%',
-      ease: Expo.easeInOut,
-      delay: 2
-    });
-  }
+  // componentDidMount() {
+  //   this.loaderTween = TweenLite.to(this.loaderWrap, 1, {
+  //     x: '100%',
+  //     ease: Expo.easeInOut,
+  //     delay: 2
+  //   });
+  // }
 
   render() {
     return (
       <div>
         <div className="content">
           {' '}
-          {this.props.username ? (
+          {window ? (
             <h1>
               HELLO
-              {` ${this.props.username}`}
+              {` ${window.location.href}`}
             </h1>
           ) : (
             '😵 😵 😵   Error   😵 😵 😵'
@@ -56,14 +63,15 @@ press me
             </button>
           </div>
           <div className="coroner-message" ref={div => (this.coronerWrap = div)}>
-            DEALING WITH THE CORONER
+            {this.state.message.text}
           </div>
+          <UriForm uri={uriObj} />
         </div>
         {' '}
         {/* end content */}
-        <div className="loader" ref={div => (this.loaderWrap = div)}>
+        {/* <div className="loader" ref={div => (this.loaderWrap = div)}>
           THIS IS THE LOADER WRAP, PUT THE SPINNER HERE
-        </div>
+        </div> */}
       </div>
     );
   }

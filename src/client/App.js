@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './app.css';
-import ReactImage from './react.png';
+// import ReactImage from './react.png';
 import Demo from './components/demo/gsap-demo';
 
 export default class App extends Component {
@@ -22,7 +22,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        {this.state.username ? (
+        {/* {this.state.username ? (
           <h1>
             Hello
             {this.state.username}
@@ -32,7 +32,7 @@ export default class App extends Component {
 Loading.. please wait!
           </h1>
         )}
-        <img src={ReactImage} alt="react" />
+        <img src={ReactImage} alt="react" /> */}
         <Demo username={this.state.username ? this.state.username : 'Loading...'} />
       </div>
     );
