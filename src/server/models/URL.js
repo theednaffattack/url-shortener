@@ -9,7 +9,7 @@ const Counter = mongoose.model('Counter', countersSchema);
 
 const urlSchema = new mongoose.Schema({
   _id: { type: Number },
-  url: '',
+  url: { type: String, required: true },
   created_at: ''
 });
 

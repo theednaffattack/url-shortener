@@ -26,17 +26,6 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        {/* {this.state.username ? (
-          <h1>
-            Hello
-            {this.state.username}
-          </h1>
-        ) : (
-          <h1>
-Loading.. please wait!
-          </h1>
-        )}
-        <img src={ReactImage} alt="react" /> */}
         <Demo
           errors={this.state.errors ? this.state.errors : 'no errors'}
           username={this.state.username ? this.state.username : 'Loading...'}

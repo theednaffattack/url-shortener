@@ -5,13 +5,19 @@ const cors = require('cors');
 const whitelist = [
   'http://192.168.180.160:3000',
   'http://192.168.180.248:3000',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://192.168.180.160:8001',
+  'http://192.168.180.248:8001',
+  'http://localhost:8001'
 ];
 const corsOptions = {
   origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
+      console.log('origin');
+      console.log(origin);
       callback(null, true);
     } else {
+      console.log(origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -51,6 +57,9 @@ app.use(cors(corsOptions));
 app.use(express.static('dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// parse application/json
+app.use(bodyParser.json());
+
 app.get('/api/getUsername', (req, res) => res.send(userObj));
 
 app.get('/:hash', (req, res) => {
@@ -67,11 +76,18 @@ app.get('/:hash', (req, res) => {
 // app.listen(port, () => console.log(`Listening on port ${objCatcher[Object.keys(objCatcher)[0]]}/${port}!`));
 
 app.post('/shorten', (req, res, next) => {
-  console.log(req.body.url);
-  const urlData = req.body.url;
+  console.log('Inside post req.body.url');
+  console.log(req.body);
+  const urlData = req.body.uri;
   URL.findOne({ url: urlData }, (err, doc) => {
     if (doc) {
       console.log('entry found in db');
+      console.log({
+        url: urlData,
+        hash: btoa(doc._id),
+        status: 200,
+        statusTxt: 'OK'
+      });
       res.send({
         url: urlData,
         hash: btoa(doc._id),
@@ -80,11 +96,12 @@ app.post('/shorten', (req, res, next) => {
       });
     } else {
       console.log('entry NOT found in db, saving new');
+      const stringUrl = urlData.toString();
       const url = new URL({
-        url: urlData
+        url: stringUrl
       });
       url.save(() => {
-        if (err) return next(err); // console.error(err);
+        if (err) console.error(err);
         res.send({
           url: urlData,
           hash: btoa(url._id),
@@ -132,28 +149,50 @@ const db = mongoose.connect(
 //   console.log("we're connected!");
 // });
 
+const whaa = new Error('whaa');
+
+const promiseMe = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, whaa);
+});
+
+promiseMe
+  .then((successMessage) => {
+    console.log(`Hooray ${successMessage}`);
+  })
+  .catch((errorMessage) => {
+    console.log(`Error ${errorMessage}`);
+  });
+
 db.then(
   (database) => {
     console.log("we're connected!");
 
     console.log(connectionString);
-    const urlCollection = database.connection.db.collection('URL');
-    const counterCollection = database.connection.db.collection('Counter');
+    // console.log(database.connection.db);
+    // const urlCollection = database.connection.db.collection('Url');
+    // const counterCollection = database.connection.db.collection('Counter');
     // console.log(database.connection.db.collection('URL'));
-    urlCollection.remove({}, () => {
-      console.log('URL collection removed');
-    });
-    counterCollection.remove({}, () => {
-      console.log('Counter collection removed');
-    });
-    counterCollection.remove({}, () => {
-      console.log('Pre-save Counter collection removal');
-      const counter = new Counter({ _id: 'url_count', count: 0 });
-      counter.save((err) => {
-        if (err) return console.error(err);
-        console.log('counter inserted');
-      });
-    });
+    // counterCollection.remove({}, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    //   console.log('Counter collection removed');
+    // });
+
+    // Counter.remove({}, () => {
+    //   console.log('Pre-save Counter collection removal');
+    //   const counter = new Counter({ _id: 'url_count', count: 0 });
+    //   counter.save((err) => {
+    //     if (err) return console.error(err);
+    //     console.log('counter inserted');
+    //   });
+    // });
+    // URL.remove({}, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    //   console.log('Url collection removed');
+    // });
   },
   (err) => {
     console.error(`stuff ${err}`);

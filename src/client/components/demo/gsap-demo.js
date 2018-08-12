@@ -53,8 +53,7 @@ class Demo extends Component {
           {' '}
           {window ? (
             <h1>
-              HELLO
-              {` ${window.location.href}`}
+              {`${this.props.username} (${window.location.href})`}
             </h1>
           ) : (
             '😵 😵 😵   Error   😵 😵 😵'
@@ -62,9 +61,6 @@ class Demo extends Component {
           {' '}
           THIS IS THE CONTENT SECTION
           <div>
-            <pre>
-              {JSON.stringify(this.props)}
-            </pre>
             <button onClick={this.handleClick}>
 press me
             </button>
