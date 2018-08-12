@@ -1,6 +1,9 @@
 const express = require('express');
 const os = require('os');
 const cors = require('cors');
+const chalk = require('chalk');
+
+const { log } = console;
 
 const whitelist = [
   'http://192.168.180.160:3000',
@@ -101,6 +104,24 @@ app.post('/shorten', (req, res, next) => {
         url: stringUrl
       });
       url.save(() => {
+        // Use any CSS color name
+
+        // crayon('#ffcc00').log('old gold');
+
+        // Compose multiple styles using the chainable API
+        // log(chalk.grey.bgGreen.bold('FROM SAVE'));
+
+        log(
+          chalk
+            .bgHex('#89CFF0')
+            .hex('#36454F')
+            .bold('\n      FROM SAVE    \n')
+        );
+        console.log('url._id');
+        console.log('url._id');
+        console.log(url._id);
+        console.log('btoa');
+        console.log(btoa(url._id));
         if (err) console.error(err);
         res.send({
           url: urlData,
