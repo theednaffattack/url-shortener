@@ -4,6 +4,22 @@ import styled from 'styled-components';
 import { withFormik } from '../../../node_modules/formik';
 import DisplayFormikState from './DisplayFormikState';
 
+const postData = (url = '', data = {}) => fetch(url, {
+  method: 'POST', // *GET, POST, PUT, DELETE, etc.
+  mode: 'cors', // no-cors, cors, *same-origin
+  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  credentials: 'same-origin', // include, same-origin, *omit
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8'
+    // "Content-Type": "application/x-www-form-urlencoded",
+  },
+  redirect: 'follow', // manual, *follow, error
+  referrer: 'no-referrer', // no-referrer, *client
+  body: JSON.stringify(data) // body data type must match "Content-Type" header
+})
+  .then(response => response.json()) // parses response to JSON
+  .catch(error => ({ errors: { msg: error } }));
+
 const SubmitButton = styled.button`
   display: inline-block;
   font-weight: 400;
@@ -34,30 +50,6 @@ const SubmitButton = styled.button`
 const ErrorLabel = styled.span`
   display: inline-block;
 `;
-
-// .btn-outline-primary {
-//   color: #007bff;
-//   background-color: transparent;
-//   background-image: none;
-//   border-color: #007bff;
-// }
-// .btn {
-//   display: inline-block;
-//   font-weight: 400;
-//   text-align: center;
-//   white-space: nowrap;
-//   vertical-align: middle;
-//   -webkit-user-select: none;
-//   -moz-user-select: none;
-//   -ms-user-select: none;
-//   user-select: none;
-//   border: 1px solid transparent;
-//   padding: .5rem .75rem;
-//   font-size: 1rem;
-//   line-height: 1.25;
-//   border-radius: .25rem;
-//   transition: all .15s ease-in-out;
-// }
 
 const UriForm = (props) => {
   const {
@@ -117,20 +109,34 @@ export default withFormik({
       .url('Invalid URI format')
       .required('A valid link is required')
 
-      .test(
-        'is-google',
-      <ErrorLabel>
-Uhhh this isn't google
-      </ErrorLabel>,
-      value => value === 'http://www.google.com'
-      )
+    //       .test(
+    //         'is-google',
+    //       <ErrorLabel>
+    // Uhhh this isn't google
+    //       </ErrorLabel>,
+    //       value => value === 'http://www.google.com'
+    //       )
   }),
 
   handleSubmit: (values, { setSubmitting }) => {
-    setTimeout(() => {
-      // alert(JSON.stringify(values, null, 2));
-      JSON.stringify(values, null, 2);
-      setSubmitting(false);
-    }, 1000);
+    postData('http://192.168.180.248:8001/shorten', values)
+      // postData('http://192.168.180.162:8001/shorten', values)
+      .then((data) => {
+        console.log(`data ${JSON.stringify(data, null, 2)}`);
+        if (data.errors) {
+          return () => {
+            this.setState({ errors: { msg: data.errors } }, () => console.error(`state in 'then' ${this.state}`));
+          };
+        }
+        // if (data == { errors: { msg: error } })
+      }) // JSON from `response.json()` call
+      .catch(error => this.setState({ errors: { msg: error } }, () => console.error(`state ${this.state}`)));
+    setSubmitting(false);
+
+    // setTimeout(() => {
+    //   // alert(JSON.stringify(values, null, 2));
+    //   JSON.stringify(values, null, 2);
+    //   setSubmitting(false);
+    // }, 1000);
   }
 })(UriForm);

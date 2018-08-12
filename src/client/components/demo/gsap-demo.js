@@ -21,7 +21,11 @@ class Demo extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleClick = this.handleClick.bind(this);
 
-    this.state = { coroner: { y: '0px' }, message: { text: 'Sample message' } };
+    this.state = {
+      coroner: { y: '0px' },
+      message: { text: 'Sample message' },
+      errors: this.props.errors
+    };
   }
 
   handleClick(e) {
@@ -58,6 +62,9 @@ class Demo extends Component {
           {' '}
           THIS IS THE CONTENT SECTION
           <div>
+            <pre>
+              {JSON.stringify(this.props)}
+            </pre>
             <button onClick={this.handleClick}>
 press me
             </button>
