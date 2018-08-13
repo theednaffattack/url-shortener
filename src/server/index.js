@@ -65,6 +65,16 @@ app.use(bodyParser.json());
 
 app.get('/api/getUsername', (req, res) => res.send(userObj));
 
+app.post('/api/getShortLink', (req, res, next) => {
+  // const { hash } = req.body;
+  console.log('hash');
+  console.log(req.body);
+  // const id = atob(hash);
+  // let shortLink = {hash: baseId, }
+  // TODO: add the host data
+  res.send(req.body);
+});
+
 app.get('/:hash', (req, res) => {
   const baseId = req.params.hash;
   const id = atob(baseId);
@@ -117,7 +127,6 @@ app.post('/shorten', (req, res, next) => {
             .hex('#36454F')
             .bold('\n      FROM SAVE    \n')
         );
-        console.log('url._id');
         console.log('url._id');
         console.log(url._id);
         console.log('btoa');

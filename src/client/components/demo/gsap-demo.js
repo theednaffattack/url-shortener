@@ -4,6 +4,8 @@ import { TweenLite, Expo } from 'gsap';
 import UriForm from '../UrlForm';
 
 import '../../styles/demo.css';
+import { postData } from '../../App';
+// import { url } from 'inspector';
 
 const uriObj = {
   uri: 'http://www.google.com'
@@ -19,21 +21,45 @@ class Demo extends Component {
     this.coronerWrap = null;
     this.coronerTween = null;
     this.handleClick = this.handleClick.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
 
     this.state = {
       coroner: { y: '0px' },
       message: { text: 'Sample message' },
-      errors: this.props.errors
+      errors: this.props.errors,
+      hash: this.props.hash
     };
   }
 
   handleClick(e) {
     e.preventDefault();
+
+    // fetch('http://192.168.180.248:8001/api/getShortLink')
+    //   .then((res) => {
+    //     console.log(res.json());
+    //     res.json();
+    //   })
+    //   .then(data => this.setState({
+    //     hash: data.hash
+    //   }))
+    //   .catch(err => this.setState({
+    //     errors: { code: 'ShortLink Fetch error', msg: err.message }
+    //   }));
+    console.log('this');
+    console.log(e.target.value);
+    postData('http://192.168.180.248:8001/api/getShortLink', { hash: e.target.value })
+      .then(data => this.setState({
+        hash: data.hash
+      }))
+      .catch(err => this.setState({
+        errors: { code: 'ShortLink Fetch error', msg: err.message }
+      }));
     this.coronerTween = TweenLite.to(this.coronerWrap, 1, {
       y: '200px',
       ease: Expo.easeInOut
     });
+    console.log('this.coronerWrap');
+    console.log('this.props');
     console.log(this.coronerWrap);
     console.log(this.props);
   }
@@ -47,6 +73,7 @@ class Demo extends Component {
   // }
 
   render() {
+    const { hash } = this.state;
     return (
       <div>
         <div className="content">
@@ -61,14 +88,17 @@ class Demo extends Component {
           {' '}
           THIS IS THE CONTENT SECTION
           <div>
-            <button onClick={this.handleClick}>
-press me
+            <button onClick={this.handleClick} value={this.state.hash}>
+              press me
             </button>
           </div>
           <div className="coroner-message" ref={div => (this.coronerWrap = div)}>
-            {this.state.message.text}
+            {this.state.hash ? this.state.hash : 'YOOOOOOO'}
           </div>
-          <UriForm uri={uriObj} />
+          <UriForm hash={hash} uri={uriObj} postHash={postData} />
+        </div>
+        <div>
+          {}
         </div>
         {' '}
         {/* end content */}

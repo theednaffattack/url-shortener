@@ -72,6 +72,10 @@ const UriForm = (props) => {
       <h1>
 URI Shortener
       </h1>
+
+      <pre>
+        {JSON.stringify(hash)}
+      </pre>
       <div>
         <label htmlFor="uri">
 Link Address
@@ -84,9 +88,6 @@ Link Address
           onChange={handleChange}
           // onBlur={_handleBlur}
         />
-        <div>
-          {values.hash}
-        </div>
         {errors.uri && touched.uri && (
         <div className="invalid-feedback">
           {errors.uri}
@@ -103,7 +104,8 @@ Link Address
 
 export default withFormik({
   mapPropsToValues: props => ({
-    uri: props.uri.uri
+    uri: props.uri.uri,
+    hash: props.hash
   }),
 
   validationSchema: Yup.object().shape({
@@ -133,7 +135,9 @@ export default withFormik({
         // console.log(`data ${JSON.stringify(data, null, 2)}`);
         // return data;
         console.log(`state in 'then' ${JSON.stringify(data)}`);
+        const chooo = () => this;
         console.log(data);
+        console.log(chooo);
         // if (data == { errors: { msg: error } })
       }) // JSON from `response.json()` call
       .catch(error => console.error(error));
