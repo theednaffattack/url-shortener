@@ -64,40 +64,55 @@ const UriForm = (props) => {
     hanldeBlur,
     handleSubmit,
     handleReset,
-    hash
+    hash,
+    status
   } = props;
 
   return (
-    <form className="" onSubmit={handleSubmit}>
-      <h1>
+    <div>
+      <form className="" onSubmit={handleSubmit}>
+        <h1>
 URI Shortener
-      </h1>
-      <div>
-        <label htmlFor="uri">
-Link Address
-        </label>
-        <input
-          name="uri"
-          type="text"
-          className={`form-control ${errors.uri && touched.uri && 'is-invalid'}`}
-          value={values.uri}
-          onChange={handleChange}
-          // onBlur={_handleBlur}
-        />
+        </h1>
         <div>
-          {values.hash}
+          <label htmlFor="uri">
+Link Address
+          </label>
+          <input
+            name="uri"
+            type="text"
+            className={`form-control ${errors.uri && touched.uri && 'is-invalid'}`}
+            value={values.uri}
+            onChange={handleChange}
+            // onBlur={_handleBlur}
+          />
+          <div>
+            {values.hash}
+          </div>
+          {errors.uri && touched.uri && (
+          <div className="invalid-feedback">
+            {errors.uri}
+          </div>
+          )}
         </div>
-        {errors.uri && touched.uri && (
-        <div className="invalid-feedback">
-          {errors.uri}
-        </div>
+        <SubmitButton type="submit">
+          {isSubmitting ? 'WAIT PLZ' : 'SUBMIT'}
+        </SubmitButton>
+        {/* <DisplayFormikState {...props} /> */}
+      </form>
+      <h1>
+Returned Data
+      </h1>
+      <h4>
+        {status ? (
+          <a href={`http://localhost:8001/${status.hash}`}>
+            {`http://localhost:8001/${status.hash}`}
+          </a>
+        ) : (
+          ''
         )}
-      </div>
-      <SubmitButton type="submit">
-        {isSubmitting ? 'WAIT PLZ' : 'ALSO SUBMIT'}
-      </SubmitButton>
-      {/* <DisplayFormikState {...props} /> */}
-    </form>
+      </h4>
+    </div>
   );
 };
 
@@ -120,11 +135,15 @@ export default withFormik({
     //       )
   }),
 
-  handleSubmit: (values, { setSubmitting }) => {
+  handleSubmit: (values, {
+    resetForm, setStatus, setErrors, setSubmitting
+  }) => {
+    console.log('shortening');
     console.log(JSON.stringify(values));
     postData('http://192.168.180.248:8001/shorten', values)
       // postData('http://192.168.180.162:8001/shorten', values)
       .then((data) => {
+        // postData('http://192.168.180.248:8001/api/getShortLink', { hash: e.target.value })
         // if (data.errors) {
         //   return () => {
         //     this.setState({ errors: { msg: data.errors } }, () => console.error(`state in 'then-if' ${this.state}`));
@@ -132,6 +151,8 @@ export default withFormik({
         // }
         // console.log(`data ${JSON.stringify(data, null, 2)}`);
         // return data;
+
+        setStatus(data);
         console.log(`state in 'then' ${JSON.stringify(data)}`);
         console.log(data);
         // if (data == { errors: { msg: error } })
